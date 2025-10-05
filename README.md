@@ -157,8 +157,8 @@ Generated packages include GitHub Actions workflow that automatically:
 
 ## Requirements
 
-- PHP 8.1 or higher
-- Laravel 10.0 or higher
+- PHP 8.2 or higher
+- Laravel 11.0 or higher
 - Composer
 
 ## Contributing

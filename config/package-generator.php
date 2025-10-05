@@ -16,7 +16,7 @@ return [
         ],
         'license' => 'MIT',
         'minimum_php' => '8.2',
-        'minimum_laravel' => '10.0',
+        'minimum_laravel' => '11.0',
     ],
 
     /*

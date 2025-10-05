@@ -7877,6 +7877,7 @@ class ComposerStaticInit050f66b2e53a66dcb9e4c845b2703138
         'Whoops\\Util\\SystemFacade' => __DIR__ . '/..' . '/filp/whoops/src/Whoops/Util/SystemFacade.php',
         'Whoops\\Util\\TemplateHelper' => __DIR__ . '/..' . '/filp/whoops/src/Whoops/Util/TemplateHelper.php',
         'XMultibyte\\PackageGenerator\\Commands\\PackageGeneratorCommand' => __DIR__ . '/../..' . '/src/Commands/PackageGeneratorCommand.php',
+        'XMultibyte\\PackageGenerator\\PackageServiceProvider' => __DIR__ . '/../..' . '/src/PackageServiceProvider.php',
         'XMultibyte\\PackageGenerator\\Tests\\Feature\\PackageGeneratorCommandTest' => __DIR__ . '/../..' . '/tests/Feature/PackageGeneratorCommandTest.php',
         'XMultibyte\\PackageGenerator\\Tests\\TestCase' => __DIR__ . '/../..' . '/tests/TestCase.php',
         'XMultibyte\\PackageGenerator\\Tests\\Unit\\ServiceProviderTest' => __DIR__ . '/../..' . '/tests/Unit/ServiceProviderTest.php',

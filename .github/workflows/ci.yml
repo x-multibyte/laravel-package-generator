@@ -12,26 +12,16 @@ jobs:
     
     strategy:
       matrix:
-        php-version: ['8.1', '8.2', '8.3']
-        laravel-version: ['10.*', '11.*', '12.*']
+        php-version: ['8.2', '8.3']
+        laravel-version: ['11.*', '12.*']
         dependency-stability: [prefer-stable]
         include:
-          - laravel-version: '10.*'
-            testbench-version: '8.*'
-            pest-plugin-version: '^2.1'
           - laravel-version: '11.*'
             testbench-version: '9.*'
             pest-plugin-version: '^4.0'
           - laravel-version: '12.*'
             testbench-version: '10.*'
             pest-plugin-version: '^4.0'
-        exclude:
-          # Exclude some combinations that are not compatible
-          # PHP 8.4 is not yet stable with older Laravel versions
-          - php-version: '8.4'
-            laravel-version: '10.*'
-          - php-version: '8.4'
-            laravel-version: '11.*'
     
     name: PHP ${{ matrix.php-version }} - Laravel ${{ matrix.laravel-version }} - ${{ matrix.dependency-stability }}
     
