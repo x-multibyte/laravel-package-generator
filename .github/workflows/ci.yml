@@ -49,10 +49,12 @@ jobs:
           
           # Require appropriate versions based on matrix
           composer require "laravel/framework:${{ matrix.laravel-version }}" "orchestra/testbench:${{ matrix.testbench-version }}" --no-interaction --no-update
-          composer require "pestphp/pest-plugin-laravel:${{ matrix.pest-plugin-version }}" "larastan/larastan:^2.9" --dev --no-interaction
           
           # Update dependencies with --with-all-dependencies to handle conflicts
           composer update --prefer-dist --no-interaction --with-all-dependencies
+          
+          # Install development tools after updating main dependencies
+          composer require "pestphp/pest-plugin-laravel:${{ matrix.pest-plugin-version }}" "larastan/larastan:^2.9" --dev --no-interaction
 
       - name: Create build directory for PHPStan
         run: mkdir -p build/phpstan
