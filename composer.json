@@ -46,7 +46,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "XMultibyte\\PackageGenerator\\LaravelPackageGeneratorServiceProvider"
+              "XMultibyte\\PackageGenerator\\PackageServiceProvider"
             ]
         }
     },

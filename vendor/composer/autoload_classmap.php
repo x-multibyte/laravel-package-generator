@@ -7228,7 +7228,6 @@ return array(
     'Whoops\\Util\\SystemFacade' => $vendorDir . '/filp/whoops/src/Whoops/Util/SystemFacade.php',
     'Whoops\\Util\\TemplateHelper' => $vendorDir . '/filp/whoops/src/Whoops/Util/TemplateHelper.php',
     'XMultibyte\\PackageGenerator\\Commands\\PackageGeneratorCommand' => $baseDir . '/src/Commands/PackageGeneratorCommand.php',
-    'XMultibyte\\PackageGenerator\\LaravelPackageGeneratorServiceProvider' => $baseDir . '/src/LaravelPackageGeneratorServiceProvider.php',
     'XMultibyte\\PackageGenerator\\Tests\\Feature\\PackageGeneratorCommandTest' => $baseDir . '/tests/Feature/PackageGeneratorCommandTest.php',
     'XMultibyte\\PackageGenerator\\Tests\\TestCase' => $baseDir . '/tests/TestCase.php',
     'XMultibyte\\PackageGenerator\\Tests\\Unit\\ServiceProviderTest' => $baseDir . '/tests/Unit/ServiceProviderTest.php',

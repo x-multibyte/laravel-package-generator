@@ -3,7 +3,7 @@
 namespace XMultibyte\PackageGenerator\Tests;
 
 use Orchestra\Testbench\TestCase as Orchestra;
-use XMultibyte\PackageGenerator\LaravelPackageGeneratorServiceProvider;
+use XMultibyte\PackageGenerator\PackageServiceProvider;
 
 /**
  * Base test case for Laravel Package Generator tests.
@@ -16,10 +16,10 @@ abstract class TestCase extends Orchestra
     protected function setUp(): void
     {
         parent::setUp();
-
+        
         // Additional setup can be added here
     }
-
+    
     /**
      * Get package providers.
      *
@@ -27,28 +27,28 @@ abstract class TestCase extends Orchestra
      *
      * @return array<int, class-string>
      */
-    protected function getPackageProviders($app): array
+    protected function getPackageProviders( $app ): array
     {
         return [
-            LaravelPackageGeneratorServiceProvider::class,
+            PackageServiceProvider::class,
         ];
     }
-
+    
     /**
      * Define environment setup.
      */
-    protected function defineEnvironment($app): void
+    protected function defineEnvironment( $app ): void
     {
         // Define environment configuration
         $app['config']->set('database.default', 'testing');
         $app['config']->set('database.connections.testing', [
-            'driver' => 'sqlite',
+            'driver'   => 'sqlite',
             'database' => ':memory:',
-            'prefix' => '',
+            'prefix'   => '',
         ]);
         
         // Load the package configuration
-        $configPath = __DIR__ . '/../config/laravel-package-generator.php';
+        $configPath = __DIR__ . '/../config/package-generator.php';
         if (file_exists($configPath)) {
             $config = require $configPath;
             $app['config']->set('laravel-package-generator', $config);

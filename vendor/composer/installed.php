@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'x-multibyte/laravel-package-generator',
-        'pretty_version' => '1.0.0+no-version-set',
-        'version' => '1.0.0.0',
-        'reference' => null,
+        'pretty_version' => 'dev-main',
+        'version' => 'dev-main',
+        'reference' => 'a5423aa2976df7476097fda51e7eaf5b16189263',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -1509,9 +1509,9 @@
             'dev_requirement' => false,
         ),
         'x-multibyte/laravel-package-generator' => array(
-            'pretty_version' => '1.0.0+no-version-set',
-            'version' => '1.0.0.0',
-            'reference' => null,
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
+            'reference' => 'a5423aa2976df7476097fda51e7eaf5b16189263',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

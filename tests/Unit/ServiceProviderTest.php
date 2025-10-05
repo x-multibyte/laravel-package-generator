@@ -4,7 +4,7 @@ namespace XMultibyte\PackageGenerator\Tests\Unit;
 
 use Illuminate\Support\Facades\Artisan;
 use XMultibyte\PackageGenerator\Commands\PackageGeneratorCommand;
-use XMultibyte\PackageGenerator\LaravelPackageGeneratorServiceProvider;
+use XMultibyte\PackageGenerator\PackageServiceProvider;
 use XMultibyte\PackageGenerator\Tests\TestCase;
 
 /**
@@ -19,9 +19,9 @@ class ServiceProviderTest extends TestCase
     {
         $providers = $this->app->getLoadedProviders();
         
-        $this->assertArrayHasKey(LaravelPackageGeneratorServiceProvider::class, $providers);
+        $this->assertArrayHasKey(PackageServiceProvider::class, $providers);
     }
-
+    
     /**
      * Test that the command is registered.
      */
@@ -30,7 +30,7 @@ class ServiceProviderTest extends TestCase
         $commands = Artisan::all();
         $this->assertArrayHasKey('package:new', $commands);
     }
-
+    
     /**
      * Test that the command class is bound in the container.
      */
@@ -44,7 +44,7 @@ class ServiceProviderTest extends TestCase
         $command = $commands['package:new'];
         $this->assertInstanceOf(PackageGeneratorCommand::class, $command);
     }
-
+    
     /**
      * Test that configuration is merged correctly.
      */
@@ -58,13 +58,13 @@ class ServiceProviderTest extends TestCase
         $this->assertArrayHasKey('directories', $config);
         $this->assertArrayHasKey('stubs', $config);
     }
-
+    
     /**
      * Test that the provides method returns correct services.
      */
     public function test_provides_method_returns_correct_services(): void
     {
-        $provider = new LaravelPackageGeneratorServiceProvider($this->app);
+        $provider = new PackageServiceProvider($this->app);
         $provides = $provider->provides();
         
         $this->assertContains(PackageGeneratorCommand::class, $provides);

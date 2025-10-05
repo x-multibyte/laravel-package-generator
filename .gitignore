@@ -1,0 +1,63 @@
+# Dependencies
+/vendor/
+/node_modules/
+
+# Composer
+composer.lock
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# PHP
+*.log
+
+# Testing
+/build/
+/.phpunit.cache/
+.phpunit.result.cache
+/coverage/
+/tests/coverage/
+
+# Laravel specific
+/storage/logs/
+/storage/framework/cache/
+/storage/framework/sessions/
+/storage/framework/testing/
+/storage/framework/views/
+
+# Package development
+/docs/_site/
+/.sass-cache/
+
+# Temporary files
+*.tmp
+*.temp
+
+# PHPStan
+/phpstan.neon.dist
+/phpstan-baseline.neon.dist
+
+# Pint
+/.php_cs.cache
+/.php-cs-fixer.cache
+
+# Pest
+/.pest/
