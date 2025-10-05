@@ -1,0 +1,24 @@
+<?php
+
+namespace {{Vendor}}\{{Package}};
+
+use Illuminate\Support\ServiceProvider;
+
+class {{Package}}ServiceProvider extends ServiceProvider
+{
+    public function boot(): void
+    {
+{{boot_loads}}
+
+        if ($this->app->runningInConsole()) {
+{{boot_publishes}}
+        }
+    }
+
+    public function register(): void
+    {
+{{register_merges}}
+
+{{register_binds}}
+    }
+}

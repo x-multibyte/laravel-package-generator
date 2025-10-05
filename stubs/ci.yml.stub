@@ -1,0 +1,291 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop, master ]
+    tags: [ 'v*.*.*', 'v*.*.*-*' ]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - '.gitignore'
+      - '.editorconfig'
+  pull_request:
+    branches: [ main, develop, master ]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - '.gitignore'
+      - '.editorconfig'
+  schedule:
+    - cron: '0 2 * * 1' # Weekly on Monday at 2 AM UTC
+  workflow_dispatch: # Allow manual triggering
+    inputs:
+      skip_tests:
+        description: 'Skip test execution'
+        required: false
+        default: 'false'
+        type: boolean
+      environment:
+        description: 'Target environment'
+        required: false
+        default: 'development'
+        type: choice
+        options:
+          - development
+          - staging
+          - production
+
+env:
+  COMPOSER_CACHE_DIR: ~/.composer/cache
+
+jobs:
+  # Code Quality & Security Analysis
+  code-quality:
+    name: Code Quality & Security
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite, dom, filter, gd, iconv, json, mbstring, pdo
+          coverage: none
+          tools: composer:v2, cs2pr
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.composer/cache
+          key: composer-${{ runner.os }}-${{ hashFiles('**/composer.lock') }}
+          restore-keys: composer-${{ runner.os }}-
+
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist --no-interaction --no-progress --optimize-autoloader
+
+      - name: Run Laravel Pint (Code Style)
+        run: ./vendor/bin/pint --test
+
+      - name: Run PHPStan (Static Analysis)
+        run: ./vendor/bin/phpstan analyse --error-format=github
+
+      - name: Security Audit
+        run: composer audit
+
+  # Testing Matrix
+  test:
+    name: Test PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }}
+    runs-on: ${{ matrix.os }}
+    needs: code-quality
+    timeout-minutes: 15
+    if: ${{ github.event.inputs.skip_tests != 'true' }}
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        php: ['8.1', '8.2', '8.3']
+        laravel: ['10.*', '11.*']
+        dependency-version: [prefer-lowest, prefer-stable]
+        include:
+          - laravel: 10.*
+            testbench: 8.*
+          - laravel: 11.*
+            testbench: 9.*
+        exclude:
+          - php: '8.1'
+            laravel: '11.*'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite, dom, filter, gd, iconv, json, mbstring, pdo
+          coverage: pcov
+          tools: composer:v2
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.composer/cache
+          key: composer-${{ runner.os }}-php${{ matrix.php }}-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            composer-${{ runner.os }}-php${{ matrix.php }}-
+            composer-${{ runner.os }}-
+
+      - name: Install Composer dependencies
+        run: |
+          composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
+          composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction --no-progress
+
+      - name: List Installed Dependencies
+        run: composer show -D
+
+      - name: Execute tests
+        run: ./vendor/bin/pest --coverage --min=80
+
+      - name: Upload coverage reports to Codecov
+        if: matrix.php == '8.3' && matrix.laravel == '11.*' && matrix.dependency-version == 'prefer-stable'
+        uses: codecov/codecov-action@v4
+        with:
+          file: ./coverage.xml
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: true
+
+  # Build & Package
+  build:
+    name: Build & Package
+    runs-on: ubuntu-latest
+    needs: test
+    if: |
+      (github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/'))) ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.environment != 'development')
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite
+          coverage: none
+          tools: composer:v2
+
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist --no-interaction --no-dev --optimize-autoloader
+
+      - name: Create build artifact
+        run: |
+          mkdir -p build
+          tar -czf build/{{package}}-${{ github.sha }}.tar.gz \
+            --exclude='.git*' \
+            --exclude='tests' \
+            --exclude='build' \
+            --exclude='node_modules' \
+            .
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: package-build-${{ github.sha }}
+          path: build/
+          retention-days: 30
+
+  # Release (only on tags)
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: package-build-${{ github.sha }}
+          path: build/
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: build/*.tar.gz
+          generate_release_notes: true
+          draft: false
+          prerelease: ${{ contains(github.ref, 'alpha') || contains(github.ref, 'beta') || contains(github.ref, 'rc') }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # Notification & Error Handling
+  notify:
+    name: Notify Results
+    runs-on: ubuntu-latest
+    needs: [code-quality, test, build]
+    if: always()
+    timeout-minutes: 5
+
+    steps:
+      - name: Set notification context
+        id: context
+        run: |
+          echo "workflow_status=unknown" >> $GITHUB_OUTPUT
+          echo "failed_jobs=" >> $GITHUB_OUTPUT
+          
+          # Determine overall status
+          if [[ "${{ needs.code-quality.result }}" == "failure" || "${{ needs.test.result }}" == "failure" || "${{ needs.build.result }}" == "failure" ]]; then
+            echo "workflow_status=failure" >> $GITHUB_OUTPUT
+            failed_jobs=""
+            [[ "${{ needs.code-quality.result }}" == "failure" ]] && failed_jobs="${failed_jobs}code-quality "
+            [[ "${{ needs.test.result }}" == "failure" ]] && failed_jobs="${failed_jobs}test "
+            [[ "${{ needs.build.result }}" == "failure" ]] && failed_jobs="${failed_jobs}build "
+            echo "failed_jobs=${failed_jobs}" >> $GITHUB_OUTPUT
+          elif [[ "${{ needs.code-quality.result }}" == "success" && ("${{ needs.test.result }}" == "success" || "${{ needs.test.result }}" == "skipped") && ("${{ needs.build.result }}" == "success" || "${{ needs.build.result }}" == "skipped") ]]; then
+            echo "workflow_status=success" >> $GITHUB_OUTPUT
+          else
+            echo "workflow_status=cancelled" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Notify Success
+        if: steps.context.outputs.workflow_status == 'success'
+        run: |
+          echo "✅ All checks passed successfully!"
+          echo "📊 Pipeline Summary:"
+          echo "  • Code Quality: ${{ needs.code-quality.result }}"
+          echo "  • Tests: ${{ needs.test.result }}"
+          echo "  • Build: ${{ needs.build.result }}"
+          echo "🚀 Package is ready for deployment!"
+
+      - name: Notify Failure
+        if: steps.context.outputs.workflow_status == 'failure'
+        run: |
+          echo "❌ Pipeline failed!"
+          echo "💥 Failed Jobs: ${{ steps.context.outputs.failed_jobs }}"
+          echo "📊 Pipeline Summary:"
+          echo "  • Code Quality: ${{ needs.code-quality.result }}"
+          echo "  • Tests: ${{ needs.test.result }}"
+          echo "  • Build: ${{ needs.build.result }}"
+          echo ""
+          echo "🔍 Check the failed jobs above for detailed error information."
+          echo "📝 Common fixes:"
+          echo "  • Code Quality issues: Run 'composer pint' locally"
+          echo "  • Test failures: Run 'composer test' locally"
+          echo "  • Build issues: Check dependencies and configuration"
+          exit 1
+
+      - name: Notify Cancellation
+        if: steps.context.outputs.workflow_status == 'cancelled'
+        run: |
+          echo "⚠️ Pipeline was cancelled or had mixed results"
+          echo "📊 Pipeline Summary:"
+          echo "  • Code Quality: ${{ needs.code-quality.result }}"
+          echo "  • Tests: ${{ needs.test.result }}"
+          echo "  • Build: ${{ needs.build.result }}"
+
+      # Optional: Send notification to external services (Slack, Discord, etc.)
+      # Uncomment and configure as needed
+      # - name: Send Slack notification
+      #   if: steps.context.outputs.workflow_status == 'failure'
+      #   uses: 8398a7/action-slack@v3
+      #   with:
+      #     status: failure
+      #     channel: '#ci-cd'
+      #     webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+      #     fields: repo,message,commit,author,action,eventName,ref,workflow
+          exit 1

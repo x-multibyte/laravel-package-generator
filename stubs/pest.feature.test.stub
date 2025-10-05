@@ -1,0 +1,25 @@
+<?php
+
+declare(strict_types=1);
+
+use {{Vendor}}\{{Package}}\{{Package}}ServiceProvider;
+
+it('can load the service provider', function () {
+    $provider = new {{Package}}ServiceProvider(app());
+    
+    expect($provider)->toBeInstanceOf({{Package}}ServiceProvider::class);
+});
+
+it('can register the service provider', function () {
+    $provider = new {{Package}}ServiceProvider(app());
+    $provider->register();
+    
+    expect(true)->toBeTrue();
+});
+
+it('can boot the service provider', function () {
+    $provider = new {{Package}}ServiceProvider(app());
+    $provider->boot();
+    
+    expect(true)->toBeTrue();
+});

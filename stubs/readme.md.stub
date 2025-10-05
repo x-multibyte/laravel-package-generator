@@ -1,0 +1,15 @@
+# {{Package}}
+
+This is a sample package.
+
+## Installation
+
+```bash
+composer require {{vendor}}/{{package}}
+```
+
+## Usage
+
+```php
+// Usage examples
+```

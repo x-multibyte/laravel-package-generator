@@ -1,0 +1,26 @@
+<?php
+
+declare(strict_types=1);
+
+it('can perform basic assertions', function () {
+    expect(true)->toBeTrue();
+    expect(false)->toBeFalse();
+    expect('hello')->toBeString();
+    expect(123)->toBeInt();
+});
+
+it('can test array operations', function () {
+    $array = ['foo', 'bar', 'baz'];
+    
+    expect($array)->toHaveCount(3);
+    expect($array)->toContain('foo');
+    expect($array)->not->toContain('qux');
+});
+
+it('can test string operations', function () {
+    $string = 'Hello World';
+    
+    expect($string)->toStartWith('Hello');
+    expect($string)->toEndWith('World');
+    expect($string)->toContain('World');
+});

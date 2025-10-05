@@ -1,0 +1,61 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Binary operation \"\\.\" between non\\-empty\\-array\\|non\\-falsy\\-string\\|true and non\\-falsy\\-string results in an error\\.$#"
+			count: 1
+			path: src/Commands/PackageGeneratorCommand.php
+
+		-
+			message: "#^Expression on left side of \\?\\? is always null\\.$#"
+			count: 2
+			path: src/Commands/PackageGeneratorCommand.php
+
+		-
+			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
+			count: 2
+			path: src/Commands/PackageGeneratorCommand.php
+
+		-
+			message: "#^Left side of && is always true\\.$#"
+			count: 1
+			path: src/Commands/PackageGeneratorCommand.php
+
+		-
+			message: "#^Parameter \\#2 \\$content of method Trae\\\\LaravelPackageGenerator\\\\Commands\\\\PackageGeneratorCommand\\:\\:writeFileWithErrorHandling\\(\\) expects string, string\\|false given\\.$#"
+			count: 1
+			path: src/Commands/PackageGeneratorCommand.php
+
+		-
+			message: "#^Property Trae\\\\LaravelPackageGenerator\\\\Commands\\\\PackageGeneratorCommand\\:\\:\\$config \\(array\\) does not accept mixed\\.$#"
+			count: 1
+			path: src/Commands/PackageGeneratorCommand.php
+
+		-
+			message: "#^Cannot access offset 'name' on mixed\\.$#"
+			count: 1
+			path: tests/Feature/PackageGeneratorCommandTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$json of function json_decode expects string, string\\|false given\\.$#"
+			count: 1
+			path: tests/Feature/PackageGeneratorCommandTest.php
+
+		-
+			message: "#^Parameter \\#2 \\$array of method PHPUnit\\\\Framework\\\\Assert\\:\\:assertArrayHasKey\\(\\) expects array\\|ArrayAccess\\<\\(int\\|string\\), mixed\\>, mixed given\\.$#"
+			count: 1
+			path: tests/Feature/PackageGeneratorCommandTest.php
+
+		-
+			message: "#^Cannot call method set\\(\\) on mixed\\.$#"
+			count: 3
+			path: tests/TestCase.php
+
+		-
+			message: "#^Cannot call method getLoadedProviders\\(\\) on Illuminate\\\\Foundation\\\\Application\\|null\\.$#"
+			count: 1
+			path: tests/Unit/ServiceProviderTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$app of class Trae\\\\LaravelPackageGenerator\\\\LaravelPackageGeneratorServiceProvider constructor expects Illuminate\\\\Contracts\\\\Foundation\\\\Application, Illuminate\\\\Foundation\\\\Application\\|null given\\.$#"
+			count: 1
+			path: tests/Unit/ServiceProviderTest.php
