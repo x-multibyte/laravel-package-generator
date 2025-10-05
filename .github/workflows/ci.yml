@@ -1,0 +1,68 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        php-version: ['8.3', '8.4']
+        laravel-version: ['10.*', '11.*', '12.*']
+        dependency-stability: [prefer-stable]
+        include:
+          - laravel-version: '10.*'
+            testbench-version: '8.*'
+          - laravel-version: '11.*'
+            testbench-version: '9.*'
+          - laravel-version: '12.*'
+            testbench-version: '10.*'
+        exclude:
+          # Exclude some combinations that may not be compatible
+          # Laravel 10 might not support PHP 8.4 in early versions
+          - php-version: '8.4'
+            laravel-version: '10.*'
+    
+    name: PHP ${{ matrix.php-version }} - Laravel ${{ matrix.laravel-version }} - ${{ matrix.dependency-stability }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, intl
+          tools: composer:v2
+          coverage: none
+
+      - name: Install dependencies
+        run: |
+          composer require "laravel/framework:${{ matrix.laravel-version }}" "orchestra/testbench:${{ matrix.testbench-version }}" --no-interaction --no-update
+          composer update --${{ matrix.dependency-stability }} --prefer-dist --no-interaction
+
+      - name: Create build directory for PHPStan
+        run: mkdir -p build/phpstan
+
+      - name: Run PHPStan
+        run: composer analyse
+
+      - name: Run Pint
+        run: composer format
+
+      - name: Check for code style errors
+        run: |
+          git add .
+          if ! git diff --cached --exit-code; then
+            echo "Pint found formatting issues. Please run 'composer format' locally and commit the changes."
+            exit 1
+          fi
+
+      - name: Run tests
+        run: composer test
