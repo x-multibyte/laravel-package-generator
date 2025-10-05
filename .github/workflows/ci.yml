@@ -45,7 +45,8 @@ jobs:
       - name: Install dependencies
         run: |
           composer require "laravel/framework:${{ matrix.laravel-version }}" "orchestra/testbench:${{ matrix.testbench-version }}" --no-interaction --no-update
-          composer update --${{ matrix.dependency-stability }} --prefer-dist --no-interaction
+          # Update dependencies with --with-all-dependencies to handle conflicts between Laravel versions and dev dependencies
+          composer update --${{ matrix.dependency-stability }} --prefer-dist --no-interaction --with-dependencies
 
       - name: Create build directory for PHPStan
         run: mkdir -p build/phpstan
