@@ -21,16 +21,6 @@ parameters:
 			path: src/Commands/PackageGeneratorCommand.php
 
 		-
-			message: "#^Parameter \\#2 \\$content of method Trae\\\\LaravelPackageGenerator\\\\Commands\\\\PackageGeneratorCommand\\:\\:writeFileWithErrorHandling\\(\\) expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Commands/PackageGeneratorCommand.php
-
-		-
-			message: "#^Property Trae\\\\LaravelPackageGenerator\\\\Commands\\\\PackageGeneratorCommand\\:\\:\\$config \\(array\\) does not accept mixed\\.$#"
-			count: 1
-			path: src/Commands/PackageGeneratorCommand.php
-
-		-
 			message: "#^Cannot access offset 'name' on mixed\\.$#"
 			count: 1
 			path: tests/Feature/PackageGeneratorCommandTest.php
@@ -56,6 +46,6 @@ parameters:
 			path: tests/Unit/ServiceProviderTest.php
 
 		-
-			message: "#^Parameter \\#1 \\$app of class Trae\\\\LaravelPackageGenerator\\\\LaravelPackageGeneratorServiceProvider constructor expects Illuminate\\\\Contracts\\\\Foundation\\\\Application, Illuminate\\\\Foundation\\\\Application\\|null given\\.$#"
+			message: "#^Parameter \\#1 \\$app of class XMultibyte\\\\PackageGenerator\\\\PackageServiceProvider constructor expects Illuminate\\\\Contracts\\\\Foundation\\\\Application, Illuminate\\\\Foundation\\\\Application\\|null given\\.$#"
 			count: 1
 			path: tests/Unit/ServiceProviderTest.php

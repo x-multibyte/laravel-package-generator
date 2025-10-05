@@ -25,8 +25,8 @@ class PackageGeneratorCommandTest extends TestCase
 
         $this->files = new Filesystem;
         // Use a temporary directory for testing
-        $this->testPackagePath = sys_get_temp_dir() . '/test-packages/test-vendor/test-package';
-        
+        $this->testPackagePath = sys_get_temp_dir().'/test-packages/test-vendor/test-package';
+
         // Ensure the test directory is clean
         if ($this->files->exists(dirname($this->testPackagePath, 2))) {
             $this->files->deleteDirectory(dirname($this->testPackagePath, 2));
@@ -146,7 +146,7 @@ class PackageGeneratorCommandTest extends TestCase
         $this->assertFileExists($this->testPackagePath.'/tests/TestCase.php');
         $this->assertFileExists($this->testPackagePath.'/phpunit.xml');
         $this->assertFileExists($this->testPackagePath.'/tests/Pest.php');
-        
+
         // Check if test files exist (using actual generated file names)
         $this->assertFileExists($this->testPackagePath.'/tests/Feature/TestPackageTest.php');
         $this->assertFileExists($this->testPackagePath.'/tests/Unit/TestPackageTest.php');
@@ -164,10 +164,10 @@ class PackageGeneratorCommandTest extends TestCase
         ]);
 
         $this->assertEquals(0, $exitCode);
-        
+
         // CI workflow might be optional, so let's check if the directory structure is created
         $this->assertTrue($this->files->isDirectory($this->testPackagePath));
-        
+
         // If CI is generated, it should be in the right place
         if ($this->files->exists($this->testPackagePath.'/.github/workflows/tests.yml')) {
             $this->assertFileExists($this->testPackagePath.'/.github/workflows/tests.yml');

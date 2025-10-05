@@ -47,7 +47,7 @@ class PackageGeneratorCommand extends Command
     {
         parent::__construct();
         $this->files = $files;
-        $this->config = config('laravel-package-generator', []);
+        $this->config = (array) config('laravel-package-generator', []);
     }
 
     /**
@@ -249,8 +249,14 @@ class PackageGeneratorCommand extends Command
     /**
      * Write file with error handling.
      */
-    private function writeFileWithErrorHandling(string $path, string $content): bool
+    private function writeFileWithErrorHandling(string $path, string|false $content): bool
     {
+        if ($content === false) {
+            $this->error("Failed to read content for {$path}: source file may not exist");
+
+            return false;
+        }
+
         try {
             $this->files->put($path, $content);
 
@@ -362,9 +368,9 @@ class PackageGeneratorCommand extends Command
     {
         // Check if path option is provided
         if ($this->option('path')) {
-            return $this->option('path') . "/{$vendor}/{$package}";
+            return $this->option('path')."/{$vendor}/{$package}";
         }
-        
+
         $basePath = $this->config['directories']['base_path'] ?? 'packages';
 
         return base_path($basePath."/{$vendor}/{$package}");
