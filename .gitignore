@@ -62,3 +62,4 @@ Thumbs.db
 # Pest
 /.pest/
 /QWEN.md
+/.qwen/
