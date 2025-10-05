@@ -51,7 +51,7 @@ jobs:
         run: |
           # Handle dependencies based on Laravel version
           # Start with a clean composer install
-          composer install --${{ matrix.dependency-stability }} --prefer-dist --no-interaction
+          composer install --prefer-dist --no-interaction
           
           # Remove existing dependencies to avoid conflicts
           composer remove "laravel/framework" "orchestra/testbench" "pestphp/pest-plugin-laravel" "larastan/larastan" --dev --no-interaction || true
@@ -61,7 +61,7 @@ jobs:
           composer require "pestphp/pest-plugin-laravel:${{ matrix.pest-plugin-version }}" "larastan/larastan:^2.9" --dev --no-interaction
           
           # Update dependencies with --with-all-dependencies to handle conflicts
-          composer update --${{ matrix.dependency-stability }} --prefer-dist --no-interaction --with-all-dependencies
+          composer update --prefer-dist --no-interaction --with-all-dependencies
 
       - name: Create build directory for PHPStan
         run: mkdir -p build/phpstan
