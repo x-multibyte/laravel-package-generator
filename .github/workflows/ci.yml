@@ -44,21 +44,24 @@ jobs:
 
       - name: Install dependencies
         run: |
-          # Remove incompatible development dependencies for older Laravel versions
+          # Handle dependencies based on Laravel version
           if [[ "${{ matrix.laravel-version }}" == "10.*" ]]; then
+            # For Laravel 10, remove conflicting dependencies and install compatible versions
             composer remove pestphp/pest-plugin-laravel larastan/larastan --dev --no-interaction || true
-          fi
-          
-          # Require Laravel and Testbench
-          composer require "laravel/framework:${{ matrix.laravel-version }}" "orchestra/testbench:${{ matrix.testbench-version }}" --no-interaction --no-update
-          
-          # Install compatible development dependencies for older Laravel versions
-          if [[ "${{ matrix.laravel-version }}" == "10.*" ]]; then
+            composer require "laravel/framework:${{ matrix.laravel-version }}" "orchestra/testbench:${{ matrix.testbench-version }}" --no-interaction --no-update
             composer require "pestphp/pest-plugin-laravel:^3.0" "larastan/larastan:^2.0" --dev --no-interaction || true
+          elif [[ "${{ matrix.laravel-version }}" == "11.*" ]]; then
+            # For Laravel 11, use standard dependencies
+            composer require "laravel/framework:${{ matrix.laravel-version }}" "orchestra/testbench:${{ matrix.testbench-version }}" --no-interaction --no-update
+          elif [[ "${{ matrix.laravel-version }}" == "12.*" ]]; then
+            # For Laravel 12, remove conflicting dependencies and install compatible versions
+            composer remove pestphp/pest-plugin-laravel larastan/larastan --dev --no-interaction || true
+            composer require "laravel/framework:${{ matrix.laravel-version }}" "orchestra/testbench:${{ matrix.testbench-version }}" --no-interaction --no-update
+            composer require "pestphp/pest-plugin-laravel:^4.0" "larastan/larastan:^2.0" --dev --no-interaction || true
           fi
           
-          # Update dependencies with --with-dependencies to handle conflicts between Laravel versions and dev dependencies
-          composer update --${{ matrix.dependency-stability }} --prefer-dist --no-interaction --with-dependencies
+          # Update dependencies with --with-all-dependencies to handle conflicts
+          composer update --${{ matrix.dependency-stability }} --prefer-dist --no-interaction --with-all-dependencies
 
       - name: Create build directory for PHPStan
         run: mkdir -p build/phpstan
