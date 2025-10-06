@@ -1,68 +1,68 @@
 {
-    "name": "x-multibyte/laravel-package-generator",
-    "description": "A powerful Laravel package generator with modern tooling and best practices",
-    "type": "library",
-    "license": "MIT",
-    "keywords": [
-        "laravel",
-        "package",
-        "generator",
-        "artisan",
-        "command",
-        "scaffold"
-    ],
-    "authors": [
-        {
-            "name": "RoyThia",
-            "email": "roy@xmultibyte.com",
-            "role": "Developer",
-            "homepage": "https://xmultibyte.com"
-        }
-    ],
-    "require": {
-        "php": "^8.2",
-        "illuminate/console": "^11.0|^12.0",
-        "illuminate/filesystem": "^11.0|^12.0",
-        "illuminate/support": "^11.0|^12.0"
-    },
-    "require-dev": {
-        "orchestra/testbench": "^9.0|^10.0",
-        "pestphp/pest": "^4.0",
-        "pestphp/pest-plugin-laravel": "^4.0",
-        "laravel/pint": "^1.0",
-        "phpstan/phpstan": "^1.10",
-        "larastan/larastan": "^2.0"
-    },
-    "autoload": {
-        "psr-4": {
-            "XMultibyte\\PackageGenerator\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "XMultibyte\\PackageGenerator\\Tests\\": "tests/"
-        }
-    },
-    "extra": {
-        "laravel": {
-            "providers": [
-              "XMultibyte\\PackageGenerator\\PackageServiceProvider"
-            ]
-        }
-    },
-    "scripts": {
-        "test": "pest",
-        "test-coverage": "pest --coverage",
-        "format": "pint",
-        "analyse": "phpstan analyse",
-        "quality": "composer format && composer analyse && composer test"
-    },
-    "config": {
-        "sort-packages": true,
-        "allow-plugins": {
-            "pestphp/pest-plugin": true
-        }
-    },
-    "minimum-stability": "stable",
-    "prefer-stable": true
+  "name": "x-multibyte/laravel-package-generator",
+  "description": "A powerful Laravel package generator with modern tooling and best practices",
+  "type": "library",
+  "license": "MIT",
+  "keywords": [
+    "laravel",
+    "package",
+    "generator",
+    "artisan",
+    "command",
+    "scaffold"
+  ],
+  "authors": [
+    {
+      "name": "RoyThia",
+      "email": "roy@xmultibyte.com",
+      "role": "Developer",
+      "homepage": "https://xmultibyte.com"
+    }
+  ],
+  "require": {
+    "php": "^8.2",
+    "illuminate/console": "^11.0",
+    "illuminate/filesystem": "^11.0",
+    "illuminate/support": "^11.0"
+  },
+  "require-dev": {
+    "orchestra/testbench": "^9.0",
+    "pestphp/pest": "^4.0",
+    "pestphp/pest-plugin-laravel": "^4.0",
+    "laravel/pint": "^1.0",
+    "phpstan/phpstan": "^1.10",
+    "larastan/larastan": "^2.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "XMultibyte\\PackageGenerator\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "XMultibyte\\PackageGenerator\\Tests\\": "tests/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "XMultibyte\\PackageGenerator\\PackageServiceProvider"
+      ]
+    }
+  },
+  "scripts": {
+    "test": "pest",
+    "test-coverage": "pest --coverage",
+    "format": "pint",
+    "analyse": "phpstan analyse",
+    "quality": "composer format && composer analyse && composer test"
+  },
+  "config": {
+    "sort-packages": true,
+    "allow-plugins": {
+      "pestphp/pest-plugin": true
+    }
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true
 }

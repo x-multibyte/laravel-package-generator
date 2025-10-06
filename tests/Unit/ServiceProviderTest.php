@@ -18,10 +18,10 @@ class ServiceProviderTest extends TestCase
     public function test_service_provider_is_loaded(): void
     {
         $providers = $this->app->getLoadedProviders();
-
+        
         $this->assertArrayHasKey(PackageServiceProvider::class, $providers);
     }
-
+    
     /**
      * Test that the command is registered.
      */
@@ -30,7 +30,7 @@ class ServiceProviderTest extends TestCase
         $commands = Artisan::all();
         $this->assertArrayHasKey('package:new', $commands);
     }
-
+    
     /**
      * Test that the command class is bound in the container.
      */
@@ -39,26 +39,26 @@ class ServiceProviderTest extends TestCase
         // The command should be registered through the service provider
         $commands = Artisan::all();
         $this->assertArrayHasKey('package:new', $commands);
-
+        
         // Check if the command instance is of the correct class
         $command = $commands['package:new'];
         $this->assertInstanceOf(PackageGeneratorCommand::class, $command);
     }
-
+    
     /**
      * Test that configuration is merged correctly.
      */
     public function test_configuration_is_merged(): void
     {
-        $config = config('laravel-package-generator');
-
+        $config = config('package-generator');
+        
         $this->assertIsArray($config);
         $this->assertArrayHasKey('defaults', $config);
         $this->assertArrayHasKey('features', $config);
         $this->assertArrayHasKey('directories', $config);
         $this->assertArrayHasKey('stubs', $config);
     }
-
+    
     /**
      * Test that the provides method returns correct services.
      */
@@ -66,7 +66,7 @@ class ServiceProviderTest extends TestCase
     {
         $provider = new PackageServiceProvider($this->app);
         $provides = $provider->provides();
-
+        
         $this->assertContains(PackageGeneratorCommand::class, $provides);
     }
 }

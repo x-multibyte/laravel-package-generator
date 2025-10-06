@@ -20,16 +20,16 @@ class PackageServiceProvider extends ServiceProvider
     {
         // Merge package configuration
         $this->mergeConfigFrom(
-            __DIR__.'/../config/package-generator.php',
-            'laravel-package-generator'
+            __DIR__ . '/../config/package-generator.php',
+            'package-generator'
         );
-
+        
         // Register the command
         $this->commands([
             PackageGeneratorCommand::class,
         ]);
     }
-
+    
     /**
      * Bootstrap any application services.
      */
@@ -37,21 +37,21 @@ class PackageServiceProvider extends ServiceProvider
     {
         // Publish configuration file
         $this->publishes([
-            __DIR__.'/../config/package-generator.php' => config_path('laravel-package-generator.php'),
+            __DIR__ . '/../config/package-generator.php' => config_path('laravel-package-generator.php'),
         ], 'laravel-package-generator-config');
-
+        
         // Publish stub files
         $this->publishes([
-            __DIR__.'/../stubs' => resource_path('stubs/laravel-package-generator'),
+            __DIR__ . '/../stubs' => resource_path('stubs/laravel-package-generator'),
         ], 'laravel-package-generator-stubs');
-
+        
         // Publish all assets
         $this->publishes([
-            __DIR__.'/../config/package-generator.php' => config_path('laravel-package-generator.php'),
-            __DIR__.'/../stubs' => resource_path('stubs/laravel-package-generator'),
-        ], 'laravel-package-generator');
+            __DIR__ . '/../config/package-generator.php' => config_path('laravel-package-generator.php'),
+            __DIR__ . '/../stubs'                        => resource_path('stubs/laravel-package-generator'),
+        ], 'package-generator');
     }
-
+    
     /**
      * Get the services provided by the provider.
      *
