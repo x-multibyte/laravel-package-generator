@@ -11,9 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php: [ '8.2', '8.3' ]
+        laravel: [ '11.*', '12.*' ]
 
-    name: PHP ${{ matrix.php }}
+    name: Laravel ${{ matrix.laravel }} on PHP 8.3
 
     steps:
       - name: Checkout code
@@ -22,26 +22,26 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.php }}
+          php-version: '8.3'
           extensions: dom, curl, libxml, mbstring, zip
-          coverage: none
           tools: composer:v2
 
       - name: Install dependencies
         run: |
-          composer install --prefer-dist --no-interaction --no-progress
+          # Guide dependency resolution by temporarily requiring laravel/framework
+          composer require "laravel/framework:${{ matrix.laravel }}" --no-update --no-interaction
+          composer update --prefer-dist --no-interaction --prefer-stable
 
       - name: Validate composer.json
-        run: composer validate --strict || echo "composer.json validation warning (non-blocking)"
+        run: composer validate --strict || true
 
-      - name: Check code formatting with Pint (non-blocking)
-        run: |
-          composer format --dry-run
+      - name: Check formatting (non-blocking)
+        run: composer format --dry-run
         continue-on-error: true
 
-      - name: Run static analysis with PHPStan (non-blocking)
+      - name: PHPStan analysis (non-blocking)
         run: composer analyse
         continue-on-error: true
 
-      - name: Run tests with Pest
+      - name: Run tests
         run: composer test
