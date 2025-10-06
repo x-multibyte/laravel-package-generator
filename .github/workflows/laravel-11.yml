@@ -1,4 +1,4 @@
-name: CI
+name: Laravel 11
 
 on:
   push:
@@ -9,15 +9,8 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        laravel: [ '11.*', '12.*' ]
-
-    name: Laravel ${{ matrix.laravel }} on PHP 8.3
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -26,10 +19,9 @@ jobs:
           extensions: dom, curl, libxml, mbstring, zip
           tools: composer:v2
 
-      - name: Install dependencies
+      - name: Install dependencies for Laravel 11
         run: |
-          # Guide dependency resolution by temporarily requiring laravel/framework
-          composer require "laravel/framework:${{ matrix.laravel }}" --no-update --no-interaction
+          composer require "laravel/framework:11.*" --no-update --no-interaction
           composer update --prefer-dist --no-interaction --prefer-stable
 
       - name: Validate composer.json

@@ -1,0 +1,39 @@
+name: Laravel 12
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: dom, curl, libxml, mbstring, zip
+          tools: composer:v2
+
+      - name: Install dependencies for Laravel 12
+        run: |
+          composer require "laravel/framework:12.*" --no-update --no-interaction
+          composer update --prefer-dist --no-interaction --prefer-stable
+
+      - name: Validate composer.json
+        run: composer validate --strict || true
+
+      - name: Check formatting (non-blocking)
+        run: composer format --dry-run
+        continue-on-error: true
+
+      - name: PHPStan analysis (non-blocking)
+        run: composer analyse
+        continue-on-error: true
+
+      - name: Run tests
+        run: composer test

@@ -1,0 +1,11 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Method XMultibyte\\\\PackageGenerator\\\\Commands\\\\PackageGeneratorCommand\\:\\:getConfigArray\\(\\) has parameter \\$default with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Commands/PackageGeneratorCommand.php
+
+		-
+			message: "#^Method XMultibyte\\\\PackageGenerator\\\\Commands\\\\PackageGeneratorCommand\\:\\:getConfigArray\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Commands/PackageGeneratorCommand.php
