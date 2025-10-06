@@ -4,20 +4,20 @@ A powerful Laravel package that provides an Artisan command to generate complete
 
 ## Features
 
-- 🚀 **Complete Package Structure**: Generates standard Laravel package directory structure
-- 🧪 **Testing Framework**: Supports both PHPUnit and Pest testing frameworks
-- 🔧 **Code Quality Tools**: Integrated with PHPStan, Larastan, and Laravel Pint
-- 📦 **CI/CD Ready**: Includes GitHub Actions workflow for automated testing
-- 🎨 **Customizable Templates**: All stub files can be customized and published
-- 🔒 **Type Safety**: Full type declarations and PHPDoc comments
-- 📝 **Documentation**: Auto-generates README and package documentation
+- **Complete Package Structure**: Generates standard Laravel package directory structure
+- **Testing Framework**: Supports both PHPUnit and Pest testing frameworks
+- **Code Quality Tools**: Integrated with PHPStan, Larastan, and Laravel Pint
+- **CI/CD Ready**: Includes GitHub Actions workflow for automated testing
+- **Customizable Templates**: All stub files can be customized and published
+- **Type Safety**: Full type declarations and PHPDoc comments
+- **Documentation**: Auto-generates README and package documentation
 
 ## Installation
 
 Install the package via Composer:
 
 ```bash
-composer require trae/laravel-package-generator --dev
+composer require x-multibyte/laravel-package-generator --dev
 ```
 
 The package will automatically register its service provider.
@@ -33,6 +33,7 @@ php artisan package:new {vendor} {package}
 ```
 
 Example:
+
 ```bash
 php artisan package:new acme awesome-package
 ```
@@ -123,25 +124,33 @@ vendor/package/
 Generated packages include modern development tools:
 
 ### Laravel Pint
+
 Automatic code formatting following Laravel conventions:
+
 ```bash
 composer format
 ```
 
 ### PHPStan + Larastan
+
 Static analysis for type safety and code quality:
+
 ```bash
 composer analyse
 ```
 
 ### Testing
+
 Run tests with Pest or PHPUnit:
+
 ```bash
 composer test
 ```
 
 ### All Quality Checks
+
 Run all quality tools at once:
+
 ```bash
 composer quality
 ```
@@ -150,16 +159,14 @@ composer quality
 
 Generated packages include GitHub Actions workflow that automatically:
 
-- Runs tests on multiple PHP versions (8.1, 8.2, 8.3)
 - Performs code quality checks
 - Validates code formatting
 - Runs static analysis
 
 ## Requirements
 
-- PHP 8.2 or higher
-- Laravel 11.0 or higher
-- Composer
+- PHP 8.3 or later
+- Laravel 11.0 or 12.0
 
 ## Contributing
 
@@ -169,12 +176,6 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 This package is open-sourced software licensed under the [MIT license](LICENSE).
 
-## Credits
-
-- **Author**: Trae AI
-- **Email**: support@trae.ai
-- **Website**: [https://trae.ai](https://trae.ai)
-
 ## Support
 
-If you discover any security vulnerabilities or have questions, please email support@trae.ai.
+If you discover any security vulnerabilities or have questions, please email <roy@xmultibyte.com> .
