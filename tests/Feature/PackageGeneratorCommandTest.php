@@ -13,26 +13,26 @@ use XMultibyte\PackageGenerator\Tests\TestCase;
 class PackageGeneratorCommandTest extends TestCase
 {
     private Filesystem $files;
-
+    
     private string $testPackagePath;
-
+    
     /**
      * Setup the test environment.
      */
     protected function setUp(): void
     {
         parent::setUp();
-
+        
         $this->files = new Filesystem;
         // Use a temporary directory for testing
-        $this->testPackagePath = sys_get_temp_dir().'/test-packages/test-vendor/test-package';
-
+        $this->testPackagePath = sys_get_temp_dir() . '/test-packages/test-vendor/test-package';
+        
         // Ensure the test directory is clean
         if ($this->files->exists(dirname($this->testPackagePath, 2))) {
             $this->files->deleteDirectory(dirname($this->testPackagePath, 2));
         }
     }
-
+    
     /**
      * Clean up after tests.
      */
@@ -42,20 +42,20 @@ class PackageGeneratorCommandTest extends TestCase
         if ($this->files->exists($this->testPackagePath)) {
             $this->files->deleteDirectory(dirname($this->testPackagePath, 2));
         }
-
+        
         parent::tearDown();
     }
-
+    
     /**
      * Test that the package generator command is registered.
      */
     public function test_package_generator_command_is_registered(): void
     {
         $commands = Artisan::all();
-
+        
         $this->assertArrayHasKey('package:new', $commands);
     }
-
+    
     /**
      * Test basic package generation.
      */
@@ -63,136 +63,133 @@ class PackageGeneratorCommandTest extends TestCase
     {
         // Run the command
         $exitCode = Artisan::call('package:new', [
-            'vendor' => 'test-vendor',
+            'vendor'  => 'test-vendor',
             'package' => 'test-package',
-            '--path' => dirname($this->testPackagePath, 2),
+            '--path'  => dirname($this->testPackagePath, 2),
         ]);
-
+        
         $this->assertEquals(0, $exitCode);
-
+        
         // Check that basic files are created
-        $this->assertFileExists($this->testPackagePath.'/composer.json');
-        $this->assertFileExists($this->testPackagePath.'/src/TestPackageServiceProvider.php');
-        $this->assertFileExists($this->testPackagePath.'/README.md');
-        $this->assertFileExists($this->testPackagePath.'/.gitignore');
+        $this->assertFileExists($this->testPackagePath . '/composer.json');
+        $this->assertFileExists($this->testPackagePath . '/src/TestPackageServiceProvider.php');
+        $this->assertFileExists($this->testPackagePath . '/README.md');
+        $this->assertFileExists($this->testPackagePath . '/.gitignore');
     }
-
+    
     /**
      * Test package generation with config option.
      */
     public function test_can_generate_package_with_config(): void
     {
         $exitCode = Artisan::call('package:new', [
-            'vendor' => 'test-vendor',
-            'package' => 'test-package',
-            '--path' => dirname($this->testPackagePath, 2),
+            'vendor'   => 'test-vendor',
+            'package'  => 'test-package',
+            '--path'   => dirname($this->testPackagePath, 2),
             '--config' => true,
         ]);
-
+        
         $this->assertEquals(0, $exitCode);
-        $this->assertFileExists($this->testPackagePath.'/config/test-package.php');
+        $this->assertFileExists($this->testPackagePath . '/config/test-package.php');
     }
-
+    
     /**
      * Test package generation with facade option.
      */
     public function test_can_generate_package_with_facade(): void
     {
         $exitCode = Artisan::call('package:new', [
-            'vendor' => 'test-vendor',
-            'package' => 'test-package',
-            '--path' => dirname($this->testPackagePath, 2),
+            'vendor'   => 'test-vendor',
+            'package'  => 'test-package',
+            '--path'   => dirname($this->testPackagePath, 2),
             '--facade' => true,
         ]);
-
+        
         $this->assertEquals(0, $exitCode);
-        $this->assertFileExists($this->testPackagePath.'/src/Facades/TestPackage.php');
+        $this->assertFileExists($this->testPackagePath . '/src/Facades/TestPackage.php');
     }
-
+    
     /**
      * Test package generation with config and facade.
      */
     public function test_generates_package_with_config_and_facade(): void
     {
         $exitCode = Artisan::call('package:new', [
-            'vendor' => 'test-vendor',
-            'package' => 'test-package',
-            '--path' => dirname($this->testPackagePath, 2),
+            'vendor'   => 'test-vendor',
+            'package'  => 'test-package',
+            '--path'   => dirname($this->testPackagePath, 2),
             '--config' => true,
             '--facade' => true,
         ]);
-
+        
         $this->assertEquals(0, $exitCode);
-
+        
         // Check config and facade files
-        $this->assertFileExists($this->testPackagePath.'/config/test-package.php');
-        $this->assertFileExists($this->testPackagePath.'/src/Facades/TestPackage.php');
+        $this->assertFileExists($this->testPackagePath . '/config/test-package.php');
+        $this->assertFileExists($this->testPackagePath . '/src/Facades/TestPackage.php');
     }
-
+    
     /**
      * Test that test files are generated by default.
      */
     public function test_generates_test_files_by_default(): void
     {
         $exitCode = Artisan::call('package:new', [
-            'vendor' => 'test-vendor',
+            'vendor'  => 'test-vendor',
             'package' => 'test-package',
-            '--path' => dirname($this->testPackagePath, 2),
+            '--path'  => dirname($this->testPackagePath, 2),
         ]);
-
+        
         $this->assertEquals(0, $exitCode);
-
+        
         // Check basic test structure
-        $this->assertFileExists($this->testPackagePath.'/tests/TestCase.php');
-        $this->assertFileExists($this->testPackagePath.'/phpunit.xml');
-        $this->assertFileExists($this->testPackagePath.'/tests/Pest.php');
-
+        $this->assertFileExists($this->testPackagePath . '/tests/TestCase.php');
+        $this->assertFileExists($this->testPackagePath . '/phpunit.xml');
+        $this->assertFileExists($this->testPackagePath . '/tests/Pest.php');
+        
         // Check if test files exist (using actual generated file names)
-        $this->assertFileExists($this->testPackagePath.'/tests/Feature/TestPackageTest.php');
-        $this->assertFileExists($this->testPackagePath.'/tests/Unit/TestPackageTest.php');
+        $this->assertFileExists($this->testPackagePath . '/tests/Feature/TestPackageTest.php');
+        $this->assertFileExists($this->testPackagePath . '/tests/Unit/TestPackageTest.php');
     }
-
+    
     /**
      * Test that CI workflow is generated by default.
      */
     public function test_generates_ci_workflow_by_default(): void
     {
         $exitCode = Artisan::call('package:new', [
-            'vendor' => 'test-vendor',
+            'vendor'  => 'test-vendor',
             'package' => 'test-package',
-            '--path' => dirname($this->testPackagePath, 2),
+            '--path'  => dirname($this->testPackagePath, 2),
         ]);
-
+        
         $this->assertEquals(0, $exitCode);
-
+        
         // CI workflow might be optional, so let's check if the directory structure is created
         $this->assertTrue($this->files->isDirectory($this->testPackagePath));
-
+        
         // If CI is generated, it should be in the right place
-        if ($this->files->exists($this->testPackagePath.'/.github/workflows/tests.yml')) {
-            $this->assertFileExists($this->testPackagePath.'/.github/workflows/tests.yml');
-        } else {
-            // If not generated, that's also acceptable for basic functionality
-            $this->assertTrue(true, 'CI workflow generation is optional');
+        if ($this->files->exists($this->testPackagePath . '/.github/workflows/tests.yml')) {
+            $this->assertFileExists($this->testPackagePath . '/.github/workflows/tests.yml');
         }
     }
-
+    
     /**
      * Test composer.json content.
      */
     public function test_composer_json_has_correct_content(): void
     {
         $exitCode = Artisan::call('package:new', [
-            'vendor' => 'test-vendor',
+            'vendor'  => 'test-vendor',
             'package' => 'test-package',
-            '--path' => dirname($this->testPackagePath, 2),
+            '--path'  => dirname($this->testPackagePath, 2),
         ]);
-
+        
         $this->assertEquals(0, $exitCode);
-
-        $composerPath = $this->testPackagePath.'/composer.json';
+        
+        $composerPath = $this->testPackagePath . '/composer.json';
         $this->assertFileExists($composerPath);
-
+        
         $composerContent = json_decode(file_get_contents($composerPath), true);
         $this->assertEquals('test-vendor/test-package', $composerContent['name']);
         $this->assertArrayHasKey('autoload', $composerContent);

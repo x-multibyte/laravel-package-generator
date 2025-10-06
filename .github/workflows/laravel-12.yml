@@ -32,7 +32,7 @@ jobs:
         continue-on-error: true
 
       - name: PHPStan analysis (non-blocking)
-        run: composer analyse
+        run: composer analyse --no-cache
         continue-on-error: true
 
       - name: Run tests
